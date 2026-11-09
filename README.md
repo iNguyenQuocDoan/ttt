@@ -4,7 +4,15 @@ Trang đọc "Tôi tự học" (Thu Giang Nguyễn Duy Cần, Khai Trí, 1971) t
 
 ## Đọc sách
 
-Trên máy tính:
+Bản chính chạy trên Vercel (project `toi-tu-hoc`), có khoá Vercel Authentication cho mọi địa chỉ: phải đăng nhập tài khoản Vercel của chủ repo mới đọc được. Mỗi lần push lên nhánh `main`, Vercel tự deploy thư mục `site/` theo `vercel.json`.
+
+Khi đọc:
+
+- Vuốt ngang ở giữa màn hình để sang chương sau hoặc chương trước. Trên máy tính dùng phím mũi tên trái/phải.
+- Mỗi chương nhớ chỗ đang đọc. Đọc tới cuối chương thì mục lục ghi "đã đọc", dòng "Đọc tiếp" chỉ sang chương chưa đọc kế tiếp. Tất cả lưu trong `localStorage` của trình duyệt.
+- Các chương đã mở (và chương kế tiếp) được lưu lại bằng service worker, mất mạng vẫn đọc được. Phần này chỉ chạy trên HTTPS hoặc localhost.
+
+Chạy thử trên máy tính:
 
 ```
 python -m http.server 8000 -d site
@@ -43,4 +51,4 @@ python tools/print_pdf.py
 
 ## Bản quyền
 
-Sách vẫn còn trong thời hạn bảo hộ (tác giả mất năm 1998). Repo này để riêng tư, chỉ dùng để đọc cá nhân. Đừng chuyển repo sang công khai hay đưa trang lên mạng công cộng.
+Sách vẫn còn trong thời hạn bảo hộ (tác giả mất năm 1998). Repo này để riêng tư, chỉ dùng để đọc cá nhân. Đừng chuyển repo sang công khai, và giữ Deployment Protection của project Vercel ở chế độ "All Deployments".

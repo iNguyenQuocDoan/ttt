@@ -63,6 +63,9 @@ a { color: inherit; }
   outline-offset: 3px;
 }
 
+/* tieu de nhan focus bang JS sau khi doi chuong, khong can vien */
+h1[tabindex="-1"]:focus { outline: none; }
+
 button {
   font: inherit;
   color: inherit;
@@ -403,6 +406,8 @@ a.fn[aria-expanded="true"] {
   text-wrap: balance;
 }
 
+.toc .is-read .toc-title { color: var(--soft); }
+
 .toc a:hover .toc-title {
   text-decoration: underline;
   text-underline-offset: 0.2em;
@@ -413,4 +418,10 @@ a.fn[aria-expanded="true"] {
   margin-top: 4rem;
   font-size: 0.8rem;
   color: var(--soft);
+}
+
+/* doi chuong: chi mo cheo rat nhanh, khong truot */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 140ms;
 }
