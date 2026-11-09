@@ -1,0 +1,30 @@
+@font-face {
+  font-family: "Literata Print";
+  font-style: italic;
+  font-weight: 400;
+  src: url("print-italic-400.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Literata Print";
+  font-style: italic;
+  font-weight: 600;
+  src: url("print-italic-600.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Literata Print";
+  font-style: normal;
+  font-weight: 400;
+  src: url("print-normal-400.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Literata Print";
+  font-style: normal;
+  font-weight: 600;
+  src: url("print-normal-600.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Literata Display";
+  font-style: normal;
+  font-weight: 400;
+  src: url("display-normal-400.ttf") format("truetype");
+}

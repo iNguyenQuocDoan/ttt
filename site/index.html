@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<title>Tôi tự học</title>
+<script>
+(function () {
+  var d = document.documentElement;
+  try {
+    var t = localStorage.getItem("tth-theme");
+    if (t === "dark" || t === "light") d.dataset.theme = t;
+    var s = localStorage.getItem("tth-size");
+    if (s) d.dataset.size = s;
+  } catch (e) {}
+})();
+</script>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header class="bar">
+  <span></span>
+  <div class="bar-tools">
+    
+    <button type="button" class="theme" data-action="theme">Nền đen</button>
+  </div>
+</header>
+<main class="page">
+<header class="cover">
+<h1>Tôi tự học</h1>
+<p class="author">Thu Giang Nguyễn Duy Cần</p>
+<p class="edition">Khai Trí, 1971</p>
+</header>
+<p class="resume" hidden><a href="#"></a></p>
+<nav aria-label="Mục lục">
+<ul class="toc">
+<li><a href="tua.html" data-slug="tua"><span class="toc-title">Tựa</span></a></li>
+<li><a href="chuong-1.html" data-slug="chuong-1"><span class="toc-label">Chương thứ nhất</span><span class="toc-title">Thử tìm một định nghĩa</span></a></li>
+<li><a href="chuong-2.html" data-slug="chuong-2"><span class="toc-label">Chương thứ hai</span><span class="toc-title">Những yếu tố chính</span></a></li>
+<li><a href="chuong-3.html" data-slug="chuong-3"><span class="toc-label">Chương thứ ba</span><span class="toc-title">Những điều kiện thuận tiện</span></a></li>
+<li><a href="chuong-4.html" data-slug="chuong-4"><span class="toc-label">Chương thứ tư</span><span class="toc-title">Những phương tiện chánh</span></a></li>
+<li><a href="chuong-5.html" data-slug="chuong-5"><span class="toc-label">Chương thứ năm</span><span class="toc-title">Đọc những gì?</span></a></li>
+<li><a href="chuong-6.html" data-slug="chuong-6"><span class="toc-label">Chương thứ sáu</span><span class="toc-title">Học những gì</span></a></li>
+<li><a href="chuong-7.html" data-slug="chuong-7"><span class="toc-label">Chương thứ bảy</span><span class="toc-title">Ba yếu tố chính để xây dựng một nền văn hóa vững vàng</span></a></li>
+<li><a href="chuong-8.html" data-slug="chuong-8"><span class="toc-label">Chương thứ tám</span><span class="toc-title">Một vài nguyên tắc làm việc</span></a></li>
+<li><a href="ket-luan.html" data-slug="ket-luan"><span class="toc-title">Kết luận</span></a></li>
+<li><a href="phu-luc.html" data-slug="phu-luc"><span class="toc-label">Phụ lục</span><span class="toc-title">Lời hay ý đẹp</span></a></li>
+</ul>
+</nav>
+<footer class="credits">
+<p>Đánh máy: Chanquangtu, Readman. Sửa lỗi và bổ sung: Goldfish, Tuanz.</p>
+</footer>
+</main>
+<script src="assets/reader.js"></script>
+</body>
+</html>
