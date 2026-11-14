@@ -9,6 +9,7 @@ Bản chính chạy trên Vercel (project `toi-tu-hoc`), có khoá Vercel Authen
 Khi đọc:
 
 - Vuốt ngang ở giữa màn hình để sang chương sau hoặc chương trước. Trên máy tính dùng phím mũi tên trái/phải.
+- Bấm nút "Nghe đọc" ở góc dưới bên phải để máy đọc to từ đoạn đang xem. Đoạn đang đọc có vạch bên trái, trang tự cuộn theo, hết chương thì tự sang chương sau. Bấm "Dừng đọc" để dừng. Giọng đọc là giọng tiếng Việt có sẵn trên máy (Web Speech API), nên máy phải có giọng tiếng Việt: iPhone và Android thường có sẵn hoặc tải trong cài đặt giọng nói; trên Windows, Edge có giọng tiếng Việt tự nhiên nhất. Khi đang đọc, màn hình được giữ sáng (chỉ chạy trên HTTPS hoặc localhost).
 - Mỗi chương nhớ chỗ đang đọc. Đọc tới cuối chương thì mục lục ghi "đã đọc", dòng "Đọc tiếp" chỉ sang chương chưa đọc kế tiếp. Tất cả lưu trong `localStorage` của trình duyệt.
 - Các chương đã mở (và chương kế tiếp) được lưu lại bằng service worker, mất mạng vẫn đọc được. Phần này chỉ chạy trên HTTPS hoặc localhost.
 

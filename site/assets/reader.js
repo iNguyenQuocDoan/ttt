@@ -119,6 +119,8 @@
       paintThemeButton();
     } else if (action === "smaller" || action === "larger") {
       setSize(currentSize() + (action === "larger" ? 1 : -1));
+    } else if (action === "speak") {
+      if (speech.on) stopSpeaking(); else startSpeaking();
     }
   });
 
@@ -392,6 +394,136 @@
     goChapter(dx < 0 ? "next" : "prev");
   }, { passive: true });
 
+  /* ---------- nghe doc: giong tieng Viet co san tren may (Web Speech API) */
+
+  var synth = window.speechSynthesis;
+  var speech = { on: false, token: 0, queue: [], el: null, utter: null, follow: false, lock: null };
+
+  function viVoice() {
+    var vi = synth.getVoices().filter(function (v) { return /^vi/i.test(v.lang); });
+    // giong "Natural"/"Online" (Edge) nghe tu nhien hon giong cai san
+    return vi.filter(function (v) { return /natural|online|neural/i.test(v.name); })[0] || vi[0] || null;
+  }
+
+  function spokenText(el) {
+    var c = el.cloneNode(true);
+    c.querySelectorAll("sup").forEach(function (s) { s.remove(); });
+    c.querySelectorAll("br, .line").forEach(function (b) { b.after(" "); });
+    // "(12)" trong bai la so chu thich, khong doc
+    return c.textContent.replace(/\(\d+\)/g, "").replace(/\s+/g, " ").trim();
+  }
+
+  function sentences(text) {
+    // doc tung cau: Chrome hay cat ngang mot lan doc qua dai (~15 giay)
+    return text.match(/[^.!?…;:]+[.!?…;:]*[”"’»)]*\s*/g) || [];
+  }
+
+  function startSpeaking() {
+    if (synth.getVoices().length && !viVoice()) {
+      alert("Máy này chưa có giọng đọc tiếng Việt. Hãy tải giọng tiếng Việt trong phần cài đặt giọng nói của máy " +
+        "(Android: Chuyển văn bản thành giọng nói; iPhone: Trợ năng > Nội dung được đọc; Windows: Giọng nói), " +
+        "hoặc mở trang bằng Microsoft Edge.");
+      return;
+    }
+    stopSpeaking();
+    var anchor = readingAnchor();
+    if (!anchor) return;
+    var els = Array.prototype.slice.call(textBlocks(), anchor.index);
+    if (anchor.index === 0) els = Array.prototype.slice.call(document.querySelectorAll(".opener > *")).concat(els);
+    els.forEach(function (el) {
+      if (el.getAttribute("aria-hidden") === "true") return;
+      var text = spokenText(el);
+      if (/^[IVXLC]+\.?$/.test(text)) return; // tieu de chi la so La Ma
+      sentences(text).forEach(function (s) { speech.queue.push({ el: el, text: s }); });
+    });
+    speech.on = true;
+    keepAwake(true);
+    paintSpeakButton();
+    speakNext(speech.token);
+  }
+
+  function speakNext(token) {
+    if (token !== speech.token) return;
+    var item = speech.queue.shift();
+    if (!item) {
+      stopSpeaking();
+      updateProgress(currentSlug(), { done: true });
+      // het chuong: sang chuong sau va doc tiep
+      if (document.querySelector('.chapter-nav a[rel="next"]')) {
+        speech.follow = true;
+        goChapter("next");
+      }
+      return;
+    }
+    markSpeaking(item.el);
+    var u = new SpeechSynthesisUtterance(item.text);
+    u.lang = "vi-VN";
+    u.voice = viVoice();
+    u.onend = function () { speakNext(token); };
+    u.onerror = function () { if (token === speech.token) stopSpeaking(); };
+    speech.utter = u; // giu tham chieu: Chrome co the don rac utterance truoc khi onend chay
+    synth.speak(u);
+  }
+
+  function stopSpeaking() {
+    speech.token++;
+    speech.on = false;
+    speech.queue = [];
+    if (synth && (synth.speaking || synth.pending)) synth.cancel();
+    markSpeaking(null);
+    keepAwake(false);
+    paintSpeakButton();
+  }
+
+  function markSpeaking(el) {
+    if (speech.el === el) return;
+    if (speech.el) speech.el.classList.remove("is-speaking");
+    speech.el = el;
+    if (!el) return;
+    el.classList.add("is-speaking");
+    var top = el.getBoundingClientRect().top;
+    if (top < 0 || top > window.innerHeight * 0.6) {
+      el.scrollIntoView({ block: "start", behavior: reduceMotion.matches ? "instant" : "smooth" });
+    }
+  }
+
+  // man hinh tat thi trinh duyet ngung doc, nen giu man hinh sang khi dang doc
+  function keepAwake(on) {
+    if (!("wakeLock" in navigator)) return;
+    if (!on) {
+      if (speech.lock) speech.lock.release();
+      speech.lock = null;
+      return;
+    }
+    if (speech.lock) return;
+    navigator.wakeLock.request("screen").then(function (lock) {
+      if (!speech.on || speech.lock) { lock.release(); return; }
+      speech.lock = lock;
+      lock.addEventListener("release", function () { if (speech.lock === lock) speech.lock = null; });
+    }).catch(function () {});
+  }
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible" && speech.on) keepAwake(true);
+  });
+
+  // Chrome van doc tiep sau khi tai lai hoac roi trang
+  window.addEventListener("pagehide", function () { if (synth) synth.cancel(); });
+
+  function paintSpeakButton() {
+    if (!synth || !currentSlug()) return;
+    // nut noi co dinh: bam duoc o bat cu dau trong chuong, doc tu doan dang xem
+    var btn = document.querySelector(".speak");
+    if (!btn) {
+      btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "speak";
+      btn.dataset.action = "speak";
+      document.body.appendChild(btn);
+    }
+    btn.textContent = speech.on ? "Dừng đọc" : "Nghe đọc";
+  }
+
   /* ---------- khoi tao moi trang */
 
   function initPage(opts) {
@@ -401,6 +533,12 @@
     var slug = currentSlug();
     if (slug) updateProgress(slug, {});
     restorePosition(opts);
+    if (speech.follow) {
+      speech.follow = false;
+      startSpeaking();
+    } else {
+      stopSpeaking();
+    }
     if (opts.initial && document.fonts && document.fonts.ready) {
       var settled = window.scrollY;
       document.fonts.ready.then(function () {

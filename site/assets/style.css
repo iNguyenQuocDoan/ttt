@@ -264,6 +264,35 @@ a.fn[aria-expanded="true"] {
 
 .note-pop .note-n { margin-right: 0.4em; color: var(--soft); }
 
+/* nut nghe doc, noi o goc duoi */
+.speak {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper);
+  font-size: 0.82rem;
+}
+
+/* doan dang duoc doc to: vach doc ben trai */
+.is-speaking {
+  position: relative;
+  scroll-margin-top: 1.5rem;
+}
+
+.is-speaking::before {
+  content: "";
+  position: absolute;
+  top: 0.2em;
+  bottom: 0.2em;
+  left: -12px;
+  width: 2px;
+  background: var(--ink);
+}
+
 /* ---------- chu thich cuoi chuong */
 
 .notes {
